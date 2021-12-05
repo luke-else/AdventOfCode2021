@@ -17,9 +17,9 @@ func main() {
 
 	fmt.Println(run(content, &gameMap))
 
-	for i := 0; i < len(gameMap); i++ {
-		fmt.Println(gameMap[i])
-	}
+	// for i := 0; i < len(gameMap); i++ {
+	// 	fmt.Println(gameMap[i])
+	// }
 }
 
 func run(content *[][]int, gameMap *[1000][1000]int) int {
