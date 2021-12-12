@@ -38,10 +38,11 @@ func main() {
 
 			for coord, energy := range octopuses {
 				if energy > 9 && !flashers[coord] {
+					complete = false
 					flashers[coord] = true
 					answer++
-					for _, neighbor := range coord.Neighbours(width, height, true) {
-						octopuses[neighbor]++
+					for _, neighbour := range coord.Neighbours(width, height, true) {
+						octopuses[neighbour]++
 					}
 				}
 			}
