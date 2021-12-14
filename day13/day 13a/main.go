@@ -71,7 +71,7 @@ func FoldX(sheet map[Coordinate]bool, foldPoint int) (folded map[Coordinate]bool
 func FoldY(sheet map[Coordinate]bool, foldPoint int) (folded map[Coordinate]bool) {
 	folded = make(map[Coordinate]bool)
 	for mark := range sheet {
-		y := mark.X
+		y := mark.Y
 		if y > foldPoint {
 			//If the value is in the region that gets folded
 			y = 2*foldPoint - y
