@@ -15,12 +15,6 @@ func main() {
 	sheet := make(map[Coordinate]bool)
 	//var answer string
 
-	for y := 0; y < 1000; y++ {
-		for x := 0; x < 1000; x++ {
-			sheet[Coordinate{X: x, Y: y}] = false
-		}
-	}
-
 	for _, line := range *content {
 
 		if strings.HasPrefix(line, "fold") {
@@ -78,7 +72,7 @@ func FoldX(sheet map[Coordinate]bool, foldPoint int) (folded map[Coordinate]bool
 func FoldY(sheet map[Coordinate]bool, foldPoint int) (folded map[Coordinate]bool) {
 	folded = make(map[Coordinate]bool)
 	for mark := range sheet {
-		y := mark.X
+		y := mark.Y
 		if y > foldPoint {
 			//If the value is in the region that gets folded
 			y = 2*foldPoint - y
