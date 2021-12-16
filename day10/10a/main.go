@@ -1,6 +1,7 @@
 package main
 
 import (
+	"AdventOfCode2021/shared"
 	"bufio"
 	"fmt"
 	"os"
@@ -10,34 +11,34 @@ func main() {
 	content := returnContent("../input")
 	//content := returnContent("../testInput")
 
-	var bracketMap map[byte]byte = make(map[byte]byte)
-	var bracketCost map[byte]int = make(map[byte]int)
+	var bracketMap map[string]string = make(map[string]string)
+	var bracketCost map[string]int = make(map[string]int)
 
 	answer := 0
 
-	bracketMap[')'] = '('
-	bracketMap[']'] = '['
-	bracketMap['}'] = '{'
-	bracketMap['>'] = '<'
+	bracketMap[")"] = "("
+	bracketMap["]"] = "["
+	bracketMap["}"] = "{"
+	bracketMap[">"] = "<"
 
-	bracketCost[')'] = 3
-	bracketCost[']'] = 57
-	bracketCost['}'] = 1197
-	bracketCost['>'] = 25137
+	bracketCost[")"] = 3
+	bracketCost["]"] = 57
+	bracketCost["}"] = 1197
+	bracketCost[">"] = 25137
 
 	for _, row := range *content {
-		var stack Stack = Stack{}
+		var stack shared.Stack = shared.Stack{}
 		for _, char := range row {
-			brack, found := bracketMap[char]
+			brack, found := bracketMap[string(char)]
 
 			if !found {
 				//If it is an opening bracket
-				stack.Push(char)
+				stack.Push(string(char))
 			} else {
-				if brack == stack.Peek().char {
+				if brack == stack.Peek().Value {
 					stack.Pop()
 				} else {
-					answer += bracketCost[char]
+					answer += bracketCost[string(char)]
 					fmt.Println("Illegal,", char, "found", answer)
 					break
 				}

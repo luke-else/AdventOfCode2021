@@ -1,6 +1,7 @@
 package main
 
 import (
+	"AdventOfCode2021/shared"
 	"bufio"
 	"fmt"
 	"os"
@@ -12,7 +13,7 @@ func main() {
 	content := returnContent("../input")
 	//content := returnContent("../testInput")
 
-	sheet := make(map[Coordinate]bool)
+	sheet := make(map[shared.Coordinate]bool)
 	answer := 0
 
 	for _, line := range *content {
@@ -41,7 +42,7 @@ func main() {
 			x, _ := strconv.Atoi(coordinates[0])
 			y, _ := strconv.Atoi(coordinates[1])
 
-			sheet[Coordinate{X: x, Y: y}] = true
+			sheet[shared.Coordinate{X: x, Y: y}] = true
 
 		}
 	}
@@ -54,8 +55,8 @@ func main() {
 
 }
 
-func FoldX(sheet map[Coordinate]bool, foldPoint int) (folded map[Coordinate]bool) {
-	folded = make(map[Coordinate]bool)
+func FoldX(sheet map[shared.Coordinate]bool, foldPoint int) (folded map[shared.Coordinate]bool) {
+	folded = make(map[shared.Coordinate]bool)
 	for mark := range sheet {
 		x := mark.X
 		if x > foldPoint {
@@ -63,13 +64,13 @@ func FoldX(sheet map[Coordinate]bool, foldPoint int) (folded map[Coordinate]bool
 			x = 2*foldPoint - x
 		}
 
-		folded[Coordinate{X: x, Y: mark.Y}] = true
+		folded[shared.Coordinate{X: x, Y: mark.Y}] = true
 	}
 	return
 }
 
-func FoldY(sheet map[Coordinate]bool, foldPoint int) (folded map[Coordinate]bool) {
-	folded = make(map[Coordinate]bool)
+func FoldY(sheet map[shared.Coordinate]bool, foldPoint int) (folded map[shared.Coordinate]bool) {
+	folded = make(map[shared.Coordinate]bool)
 	for mark := range sheet {
 		y := mark.Y
 		if y > foldPoint {
@@ -77,14 +78,9 @@ func FoldY(sheet map[Coordinate]bool, foldPoint int) (folded map[Coordinate]bool
 			y = 2*foldPoint - y
 		}
 
-		folded[Coordinate{X: mark.X, Y: y}] = true
+		folded[shared.Coordinate{X: mark.X, Y: y}] = true
 	}
 	return
-}
-
-type Coordinate struct {
-	X int
-	Y int
 }
 
 func returnContent(path string) *[]string {

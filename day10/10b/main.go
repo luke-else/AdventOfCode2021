@@ -1,6 +1,7 @@
 package main
 
 import (
+	"AdventOfCode2021/shared"
 	"bufio"
 	"fmt"
 	"os"
@@ -10,43 +11,43 @@ func main() {
 	content := returnContent("../input")
 	//content := returnContent("../testInput")
 
-	var bracketMap map[byte]byte = make(map[byte]byte)
-	var reverseBracketMap map[byte]byte = make(map[byte]byte)
-	var bracketCost map[byte]int = make(map[byte]int)
+	var bracketMap map[string]string = make(map[string]string)
+	var reverseBracketMap map[string]string = make(map[string]string)
+	var bracketCost map[string]int = make(map[string]int)
 
-	bracketMap[')'] = '('
-	bracketMap[']'] = '['
-	bracketMap['}'] = '{'
-	bracketMap['>'] = '<'
+	bracketMap[")"] = "("
+	bracketMap["]"] = "["
+	bracketMap["}"] = "{"
+	bracketMap[">"] = "<"
 
-	reverseBracketMap['('] = ')'
-	reverseBracketMap['['] = ']'
-	reverseBracketMap['{'] = '}'
-	reverseBracketMap['<'] = '>'
+	reverseBracketMap["("] = ")"
+	reverseBracketMap["["] = "]"
+	reverseBracketMap["{"] = "}"
+	reverseBracketMap["<"] = ">"
 
-	bracketCost[')'] = 1
-	bracketCost[']'] = 2
-	bracketCost['}'] = 3
-	bracketCost['>'] = 4
+	bracketCost[")"] = 1
+	bracketCost["]"] = 2
+	bracketCost["}"] = 3
+	bracketCost[">"] = 4
 
 	//reduce list to required incomplete set
 
-	stackList := []Stack{}
+	stackList := []shared.Stack{}
 	autoCompletes := []int{}
 
 	for _, row := range *content {
 
-		stack := Stack{}
+		stack := shared.Stack{}
 		keep := true
 
 		for _, char := range row {
-			brack, found := bracketMap[char]
+			brack, found := bracketMap[string(char)]
 
 			if !found {
 				//If it is an opening bracket
-				stack.Push(char)
+				stack.Push(string(char))
 			} else {
-				if brack == stack.Peek().char {
+				if brack == stack.Peek().Value {
 					stack.Pop()
 				} else {
 					keep = false
@@ -62,7 +63,7 @@ func main() {
 
 	}
 
-	emptyStackNode := StackNode{}
+	emptyStackNode := shared.Node{}
 
 	for _, stack := range stackList {
 		autocomplete := 0
@@ -73,23 +74,13 @@ func main() {
 		autoCompletes = append(autoCompletes, autocomplete)
 	}
 
-	autoCompletes = mergeSort(autoCompletes, 0, len(autoCompletes)-1)
+	autoCompletes = shared.MergeSort(autoCompletes, 0, len(autoCompletes)-1)
 
 	mid := autoCompletes[len(autoCompletes)/2]
 
 	fmt.Println(mid)
 
 }
-
-// func removeElement(slice *[][]byte, i int) (new *[][]byte) {
-// 	new = &[][]byte{}
-// 	for j, row := range *slice {
-// 		if i != j {
-// 			*new = append(*new, row)
-// 		}
-// 	}
-// 	return
-// }
 
 func returnContent(path string) *[][]byte {
 	//read file and return it as an array of integers

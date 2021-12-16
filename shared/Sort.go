@@ -1,6 +1,6 @@
-package main
+package shared
 
-func mergeSort(nums []int, start int, end int) []int {
+func MergeSort(nums []int, start int, end int) []int {
 	if start == end {
 		return []int{nums[start]}
 	}
@@ -8,8 +8,8 @@ func mergeSort(nums []int, start int, end int) []int {
 	var mid int = ((end - start) / 2) + start
 
 	//Assign values back into Left and right
-	left := mergeSort(nums, start, mid)
-	right := mergeSort(nums, mid+1, end)
+	left := MergeSort(nums, start, mid)
+	right := MergeSort(nums, mid+1, end)
 
 	var combined []int
 

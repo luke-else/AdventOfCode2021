@@ -1,6 +1,7 @@
 package main
 
 import (
+	"AdventOfCode2021/shared"
 	"bufio"
 	"fmt"
 	"os"
@@ -16,7 +17,7 @@ func main() {
 	fmt.Println(run(boards, nums))
 }
 
-func run(boards *[]Board, nums []int) int {
+func run(boards *[]shared.Board, nums []int) int {
 	var bingo int
 	var n int
 	for i := 0; i < len(nums); i++ {
@@ -32,10 +33,10 @@ func run(boards *[]Board, nums []int) int {
 	return returnAnswer(&(*boards)[bingo], n)
 }
 
-func loadBoards(content *[]string) (boards *[]Board, nums []int) {
-	boards = new([]Board)
-	newBoard := Board{
-		Hash: make(map[int]location, 25),
+func loadBoards(content *[]string) (boards *[]shared.Board, nums []int) {
+	boards = new([]shared.Board)
+	newBoard := shared.Board{
+		Hash: make(map[int]shared.Location, 25),
 	}
 	boardNum := 0
 	row := 0
@@ -61,8 +62,8 @@ func loadBoards(content *[]string) (boards *[]Board, nums []int) {
 
 				for j := 0; j < len(values); j++ {
 					value, _ := strconv.Atoi(values[j])
-					newBoard.Values[row][j] = boardValue{Value: value, Visited: false}
-					newBoard.Hash[value] = location{x: row, y: j}
+					newBoard.Values[row][j] = shared.BoardValue{Value: value, Visited: false}
+					newBoard.Hash[value] = shared.Location{X: row, Y: j}
 				}
 				row++
 
@@ -70,8 +71,8 @@ func loadBoards(content *[]string) (boards *[]Board, nums []int) {
 					boardNum++
 					i++
 					*boards = append(*boards, newBoard)
-					newBoard = Board{
-						Hash: make(map[int]location, 25),
+					newBoard = shared.Board{
+						Hash: make(map[int]shared.Location, 25),
 					}
 					row = 0
 				}
@@ -84,13 +85,13 @@ func loadBoards(content *[]string) (boards *[]Board, nums []int) {
 	return
 }
 
-func callNumber(n int, boards *[]Board) int {
+func callNumber(n int, boards *[]shared.Board) int {
 	for i := 0; i < len(*boards); i++ {
 		location, present := (*boards)[i].Hash[n]
 		if present {
 			//Change the value to visited
-			(*boards)[i].Values[location.x][location.y].Visited = true
-			if checkBingo(&(*boards)[i], location.x, location.y) {
+			(*boards)[i].Values[location.X][location.Y].Visited = true
+			if checkBingo(&(*boards)[i], location.X, location.Y) {
 				return i
 			}
 		}
@@ -98,7 +99,7 @@ func callNumber(n int, boards *[]Board) int {
 	return -1
 }
 
-func checkBingo(board *Board, x int, y int) bool {
+func checkBingo(board *shared.Board, x int, y int) bool {
 	checkVertical := true
 	//check if bingo for a given row and column
 
@@ -122,7 +123,7 @@ func checkBingo(board *Board, x int, y int) bool {
 	return checkVertical || checkHorizontal
 }
 
-func returnAnswer(board *Board, n int) (answer int) {
+func returnAnswer(board *shared.Board, n int) (answer int) {
 	for i := 0; i < 5; i++ {
 		for j := 0; j < 5; j++ {
 			if !(*board).Values[i][j].Visited {
