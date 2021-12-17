@@ -22,19 +22,33 @@ func main() {
 		Y: shared.Min((*content)[2], (*content)[3]),
 	}
 
+	answer := make(map[shared.Coordinate]bool)
+
 	y := 0
 
 	for {
-		for x := 1; x < coordRight.X; x++ {
+		for x := 1; x <= coordRight.X; x++ {
+			//Test with positive Y velocity
 			probe := Probe{
 				Position: &shared.Coordinate{X: 0, Y: 0},
 				Velocity: &shared.Coordinate{X: x, Y: y},
 			}
-			success, maxY := probe.Model(&coordLeft, &coordRight)
+			success, _ := probe.Model(&coordLeft, &coordRight)
 			if success {
-				fmt.Println(y, maxY)
+				answer[shared.Coordinate{X: x, Y: y}] = true
+			}
+
+			//Test with negative Y velocity
+			probe = Probe{
+				Position: &shared.Coordinate{X: 0, Y: 0},
+				Velocity: &shared.Coordinate{X: x, Y: -y},
+			}
+			success, _ = probe.Model(&coordLeft, &coordRight)
+			if success {
+				answer[shared.Coordinate{X: x, Y: -y}] = true
 			}
 		}
+		fmt.Println(len(answer))
 		y++
 	}
 
