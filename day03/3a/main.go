@@ -1,9 +1,9 @@
 package main
 
 import (
+	"AdventOfCode2021/shared"
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 )
 
@@ -13,7 +13,7 @@ func main() {
 
 	gamma, epsilon := findGammaAndEpsilon(content)
 
-	fmt.Println(binaryToInteger(gamma) * binaryToInteger(epsilon))
+	fmt.Println(shared.BinaryToInteger(&gamma) * shared.BinaryToInteger(&epsilon))
 
 }
 
@@ -36,17 +36,6 @@ func findGammaAndEpsilon(content *[]string) (gamma string, epsilon string) {
 			epsilon += "1"
 		}
 
-	}
-	return
-}
-
-func binaryToInteger(input string) (value int) {
-	n := 0
-	for i := len(input) - 1; i >= 0; i-- {
-		if input[i] == '1' {
-			value += (int(math.Pow(float64(2), float64(n))))
-		}
-		n++
 	}
 	return
 }

@@ -1,95 +1,60 @@
 package main
 
 import (
+	"AdventOfCode2021/shared"
 	"bufio"
 	"fmt"
-	"math"
 	"os"
-	"strings"
 )
 
 func main() {
 	content := returnContent("../input")
 	//content := returnContent("../testInput")
-	fmt.Println(content)
 
-	startingString := (*content)[0]
-	pairs := make(map[string]string)
-	count := make(map[string]int)
+	binary := shared.HexToBinary(content)
 
-	//Create map of pair values
-	for i := 2; i < len(*content); i++ {
-		split := strings.Split((*content)[i], " -> ")
-		pairs[split[0]] = split[1]
-	}
+	pointer := 0
+	version := 0
 
-	//Fill initial list
-	list := LinkedList{Head: &Node{Value: string(startingString[0]), Next: nil}}
-	current := list.Head
-	for i := 1; i < len(startingString); i++ {
-		node := &Node{Value: string(startingString[i]), Next: nil}
-		count[string(startingString[i])]++
-		current.Next = node
-		current = node
-	}
+	for pointer < len(binary)-6 {
+		//Get version from first 3 Bits
+		current := ""
+		current = binary[pointer : pointer+3]
+		version += shared.BinaryToInteger(&current)
+		pointer += 3
 
-	//Run iterations on list
-	iterations := 10
-	for i := 1; i <= iterations; i++ {
-		current = list.Head
+		//determine packet type ID from next 2 bits
+		current = ""
+		current = binary[pointer : pointer+3]
+		typeID := shared.BinaryToInteger(&current)
+		pointer += 3
 
-		for current.Next != nil {
-			value := pairs[current.Value+current.Next.Value]
-			list.InsertItem(current, current.Next, value)
-			count[value]++
-			current = current.Next.Next
-		}
-		list.PrintList()
-	}
+		if typeID == 4 {
+			//literal value
+			for binary[pointer] == '1' {
+				pointer += 5
+			}
+			pointer += 5
 
-	//determine min and max
-	min := math.MaxInt
-	max := 0
-	for _, value := range count {
-		if value > max {
-			max = value
-		} else if value < min {
-			min = value
+		} else {
+			//operator value
+			if binary[pointer] == '1' {
+				pointer += 12
+			} else {
+				pointer += 16
+			}
 		}
 	}
 
-	fmt.Println(max - min)
+	fmt.Println(version)
 
 }
 
-type LinkedList struct {
-	Head *Node
-}
-
-func (l *LinkedList) InsertItem(first *Node, second *Node, value string) {
-	first.Next = &Node{Value: value, Next: second}
-}
-
-func (l *LinkedList) PrintList() {
-	list := []string{}
-	current := l.Head
-	for current != nil {
-		list = append(list, current.Value)
-		current = current.Next
-	}
-	fmt.Println(list)
-}
-
-type Node struct {
-	Value string
-	Next  *Node
-}
-
-func returnContent(path string) *[]string {
+func returnContent(path string) *string {
 	//read file and return it as an array of integers
 
 	file, err := os.Open(path)
-	var content []string
+	var content string
 
 	if err != nil {
 		fmt.Println("Unlucky, the file didn't open")
@@ -100,7 +65,7 @@ func returnContent(path string) *[]string {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		content = append(content, scanner.Text())
+		content = scanner.Text()
 	}
 
 	return &content
