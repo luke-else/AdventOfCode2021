@@ -1,6 +1,7 @@
 package main
 
 import (
+	"AdventOfCode2021/shared"
 	"bufio"
 	"fmt"
 	"math"
@@ -24,10 +25,10 @@ func main() {
 	}
 
 	//Fill initial list
-	list := LinkedList{Head: &Node{Value: string(startingString[0]), Next: nil}}
+	list := shared.LinkedList{Head: &shared.Node{Value: string(startingString[0]), Next: nil}}
 	current := list.Head
 	for i := 1; i < len(startingString); i++ {
-		node := &Node{Value: string(startingString[i]), Next: nil}
+		node := &shared.Node{Value: string(startingString[i]), Next: nil}
 		count[string(startingString[i])]++
 		current.Next = node
 		current = node
@@ -60,29 +61,6 @@ func main() {
 
 	fmt.Println(max - min)
 
-}
-
-type LinkedList struct {
-	Head *Node
-}
-
-func (l *LinkedList) InsertItem(first *Node, second *Node, value string) {
-	first.Next = &Node{Value: value, Next: second}
-}
-
-func (l *LinkedList) PrintList() {
-	list := []string{}
-	current := l.Head
-	for current != nil {
-		list = append(list, current.Value)
-		current = current.Next
-	}
-	fmt.Println(list)
-}
-
-type Node struct {
-	Value string
-	Next  *Node
 }
 
 func returnContent(path string) *[]string {
