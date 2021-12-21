@@ -1,6 +1,7 @@
 package main
 
 import (
+	"AdventOfCode2021/shared"
 	"bufio"
 	"fmt"
 	"os"
@@ -13,19 +14,19 @@ func main() {
 	// content := returnContent("../testInput")
 
 	//Construct Game board... in reverse :) (Just makes it easier for stringing them together)
-	positions := make(map[int]*GamePosition)
-	gameBoard := GameBoard{
-		Start: &GamePosition{
+	positions := make(map[int]*shared.GamePosition)
+	gameBoard := shared.GameBoard{
+		Start: &shared.GamePosition{
 			Position: 1,
 			Next:     nil,
 		},
 	}
 	positions[1] = gameBoard.Start
 	next := gameBoard.Start
-	var currentPosition *GamePosition
+	var currentPosition *shared.GamePosition
 
 	for i := 10; i > 1; i-- {
-		currentPosition = new(GamePosition)
+		currentPosition = new(shared.GamePosition)
 		currentPosition.Position = i
 		currentPosition.Next = next
 		next = currentPosition
@@ -35,11 +36,11 @@ func main() {
 	gameBoard.Start.Next = currentPosition
 
 	//Add Players to the game
-	players := make(map[int]*Player)
+	players := make(map[int]*shared.Player)
 	numPlayers := 0
 
 	for _, value := range *content {
-		newPlayer := Player{
+		newPlayer := shared.Player{
 			PlayerNum: value[0],
 			Score:     0,
 			Position:  positions[value[1]],
@@ -56,7 +57,7 @@ func main() {
 	for {
 		for i := 1; i <= numPlayers; i++ {
 			p := players[i]
-			if p.Roll(&diceVal, &numRolls) {
+			if Roll(p, &diceVal, &numRolls) {
 				winner = p.PlayerNum
 				break
 			}
@@ -76,22 +77,7 @@ func main() {
 
 }
 
-type GameBoard struct {
-	Start *GamePosition
-}
-
-type GamePosition struct {
-	Position int
-	Next     *GamePosition
-}
-
-type Player struct {
-	PlayerNum int
-	Score     int
-	Position  *GamePosition
-}
-
-func (p *Player) Roll(diceVal *int, numRolls *int) bool {
+func Roll(p *shared.Player, diceVal *int, numRolls *int) bool {
 	//simulate 3 consecutive dice rolls
 	dice := (*diceVal + 1) * 3
 	*diceVal += 3
